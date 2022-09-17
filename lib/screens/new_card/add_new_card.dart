@@ -4,6 +4,7 @@ import 'package:add_card/screens/new_card/components/card_strings.dart';
 import 'package:add_card/screens/new_card/components/card_type.dart';
 import 'package:add_card/screens/new_card/components/card_utilis.dart';
 import 'package:add_card/screens/new_card/components/input_formatters.dart';
+import 'package:add_card/widgets/custom_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -17,9 +18,8 @@ class AddNewCardScreen extends StatefulWidget {
 
 class _AddNewCardScreenState extends State<AddNewCardScreen> {
   TextEditingController cardNumberController = TextEditingController();
-  var _scaffoldKey = GlobalKey<ScaffoldState>();
-  var _formKey = GlobalKey<FormState>();
-  var _paymentCard = PaymentCard();
+  final _formKey = GlobalKey<FormState>();
+  final _paymentCard = PaymentCard();
   var _autoValidateMode = AutovalidateMode.disabled;
 
   @override
@@ -142,6 +142,12 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         ),
                       ],
                     ),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 16.0),
+                      child: CustomCheckBox(
+                        isChecked: false,
+                      ),
+                    )
                   ],
                 ),
               ),
