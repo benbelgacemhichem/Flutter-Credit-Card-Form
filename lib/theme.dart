@@ -38,7 +38,8 @@ InputDecorationTheme inputDecorationTheme() {
 ElevatedButtonThemeData elevatedButtonTheme() {
   return ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFF33cc66),
+      // backgroundColor: const Color(0xFF33cc66),
+      primary: const Color(0xFF33cc66), //Flutter version
       minimumSize: const Size(double.infinity, 56),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
