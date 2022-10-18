@@ -1,7 +1,6 @@
 import 'package:add_card/screens/credit_card_form/credit_card_form.dart';
-import 'package:add_card/screens/home_screen.dart';
 import 'package:add_card/theme.dart';
-import 'package:add_card/utils/env/environnments.dart';
+import 'package:add_card/utils/env/environments.dart';
 import 'package:flutter/material.dart';
 
 void main() {

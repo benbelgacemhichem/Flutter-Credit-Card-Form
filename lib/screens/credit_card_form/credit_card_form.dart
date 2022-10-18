@@ -1,11 +1,10 @@
-import 'package:add_card/utils/api_services.dart';
-import 'package:add_card/utils/card_strings.dart';
-import 'package:add_card/utils/card_type.dart';
-import 'package:add_card/utils/card_utilis.dart';
-import 'package:add_card/utils/env/environnments.dart';
+import 'package:add_card/services/api_services.dart';
+import 'package:add_card/constants/card_strings.dart';
+import 'package:add_card/constants/card_type.dart';
+import 'package:add_card/utils/card_utils.dart';
+import 'package:add_card/utils/env/environments.dart';
 import 'package:add_card/utils/input_formatters.dart';
 import 'package:add_card/screens/credit_card_form/widgets/custom_checkbox.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -193,7 +192,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
     });
   }
 
-  void _validateInputs() {
+  Future<void> _validateInputs() async {
     final FormState form = _formKey.currentState!;
     if (!form.validate()) {
       setState(() {
@@ -202,11 +201,12 @@ class _CreditCardFormState extends State<CreditCardForm> {
       });
       _showInSnackBar(
         'Please fix the errors in red before submitting.',
-        'error',
+        false,
       );
     } else {
       form.save();
-      ApiService.createCardToken(
+
+      final response = await ApiService.createCardToken(
         cardNumber: _paymentCard.number,
         cardHolder: _paymentCard.name,
         cardExpiryMonth: _paymentCard.month,
@@ -214,15 +214,16 @@ class _CreditCardFormState extends State<CreditCardForm> {
         cardCVC: _paymentCard.cvv,
         publicKey: DibsyConfig.pk,
         locale: 'en_US',
-      )
-          .then(
-            (response) {},
-          )
-          .catchError((error) {});
+      );
+      if (response.success) {
+        _showInSnackBar('Card Token == ${response.token}', true);
+      } else {
+        _showInSnackBar(response.error!.message.toString(), false);
+      }
     }
   }
 
-  void _showInSnackBar(String value, String type) {
+  void _showInSnackBar(String value, bool isSuccess) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -230,7 +231,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
           style: const TextStyle(color: Colors.white),
         ),
         duration: const Duration(seconds: 3),
-        backgroundColor: type == 'success' ? Colors.green : Colors.red,
+        backgroundColor: isSuccess ? Colors.green : Colors.red,
       ),
     );
   }
