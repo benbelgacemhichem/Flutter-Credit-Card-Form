@@ -12,13 +12,6 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
   bool isSelected = false;
 
   @override
-  void initState() {
-    bool isSelected = widget.isChecked;
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -33,7 +26,8 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
               child: AnimatedContainer(
                 duration: const Duration(microseconds: 500),
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.blue : Colors.transparent,
+                  color:
+                      isSelected ? const Color(0xFF1a2d42) : Colors.transparent,
                   borderRadius: BorderRadius.circular(5),
                   border: isSelected
                       ? null

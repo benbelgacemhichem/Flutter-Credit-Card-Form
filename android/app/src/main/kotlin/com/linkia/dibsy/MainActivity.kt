@@ -1,4 +1,4 @@
-package com.example.add_card
+package com.linkia.dibsy
 
 import io.flutter.embedding.android.FlutterActivity
 

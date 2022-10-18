@@ -1,22 +1,23 @@
-import 'dart:io';
-
-import 'package:add_card/screens/new_card/components/card_strings.dart';
-import 'package:add_card/screens/new_card/components/card_type.dart';
-import 'package:add_card/screens/new_card/components/card_utilis.dart';
-import 'package:add_card/screens/new_card/components/input_formatters.dart';
-import 'package:add_card/widgets/custom_checkbox.dart';
+import 'package:add_card/utils/api_services.dart';
+import 'package:add_card/utils/card_strings.dart';
+import 'package:add_card/utils/card_type.dart';
+import 'package:add_card/utils/card_utilis.dart';
+import 'package:add_card/utils/env/environnments.dart';
+import 'package:add_card/utils/input_formatters.dart';
+import 'package:add_card/screens/credit_card_form/widgets/custom_checkbox.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
-class AddNewCardScreen extends StatefulWidget {
-  const AddNewCardScreen({Key? key}) : super(key: key);
+class CreditCardForm extends StatefulWidget {
+  const CreditCardForm({Key? key}) : super(key: key);
 
   @override
-  State<AddNewCardScreen> createState() => _AddNewCardScreenState();
+  State<CreditCardForm> createState() => _CreditCardFormState();
 }
 
-class _AddNewCardScreenState extends State<AddNewCardScreen> {
+class _CreditCardFormState extends State<CreditCardForm> {
   TextEditingController cardNumberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _paymentCard = PaymentCard();
@@ -38,10 +39,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // const Spacer(),
               Form(
                 key: _formKey,
                 autovalidateMode: _autoValidateMode,
@@ -63,7 +63,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         ),
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: SvgPicture.asset('assets/icons/card.svg'),
+                          child: SvgPicture.asset(
+                            'assets/icons/card.svg',
+                          ),
                         ),
                       ),
                       onSaved: (String? value) {
@@ -79,7 +81,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                         filled: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: SvgPicture.asset('assets/icons/user.svg'),
+                          child: SvgPicture.asset(
+                            'assets/icons/user.svg',
+                          ),
                         ),
                       ),
                       onSaved: (String? value) {
@@ -103,7 +107,9 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                               prefixIcon: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
-                                child: SvgPicture.asset('assets/icons/Cvv.svg'),
+                                child: SvgPicture.asset(
+                                  'assets/icons/Cvv.svg',
+                                ),
                               ),
                             ),
                             validator: CardUtils.validateCVV,
@@ -127,7 +133,8 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 child: SvgPicture.asset(
-                                    'assets/icons/calender.svg'),
+                                  'assets/icons/calender.svg',
+                                ),
                               ),
                             ),
                             validator: CardUtils.validateDate,
@@ -136,29 +143,33 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
                               List<int> expiryDate =
                                   CardUtils.getExpiryDate(value!);
                               _paymentCard.month = expiryDate[0];
-                              _paymentCard.year = 2000 + expiryDate[1];
+                              _paymentCard.year = expiryDate[1];
                             },
                           ),
                         ),
                       ],
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 16.0),
-                      child: CustomCheckBox(
-                        isChecked: false,
-                      ),
-                    )
+                    DibsyEnvironnement.live == DibsyConfig.environnement
+                        ? const Padding(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: CustomCheckBox(
+                              isChecked: false,
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ElevatedButton(
-                  onPressed: _validateInputs,
-                  child: const Text('Pay Now'),
+              ElevatedButton(
+                onPressed: _validateInputs,
+                child: const Text(
+                  'Pay Now',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -189,19 +200,38 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
         _autoValidateMode =
             AutovalidateMode.always; // Start validating on every change.
       });
-      _showInSnackBar('Please fix the errors in red before submitting.');
+      _showInSnackBar(
+        'Please fix the errors in red before submitting.',
+        'error',
+      );
     } else {
       form.save();
-      // Encrypt and send send payment details to payment gateway
-      _showInSnackBar('Payment card is valid');
-      print(_paymentCard);
+      ApiService.createCardToken(
+        cardNumber: _paymentCard.number,
+        cardHolder: _paymentCard.name,
+        cardExpiryMonth: _paymentCard.month,
+        cardExpiryYear: _paymentCard.year,
+        cardCVC: _paymentCard.cvv,
+        publicKey: DibsyConfig.pk,
+        locale: 'en_US',
+      )
+          .then(
+            (response) {},
+          )
+          .catchError((error) {});
     }
   }
 
-  void _showInSnackBar(String value) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(value),
-      duration: const Duration(seconds: 3),
-    ));
+  void _showInSnackBar(String value, String type) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          value,
+          style: const TextStyle(color: Colors.white),
+        ),
+        duration: const Duration(seconds: 3),
+        backgroundColor: type == 'success' ? Colors.green : Colors.red,
+      ),
+    );
   }
 }
