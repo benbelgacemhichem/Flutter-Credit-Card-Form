@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Dibsy Example',
       debugShowCheckedModeBanner: false,
       theme: appThemeData(context),
-      home: const CreditCardForm(),
+      home: const HomeScreen(),
     );
   }
 }
