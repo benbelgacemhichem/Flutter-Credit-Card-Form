@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:add_card/constants/exception_constants.dart';
 import 'package:add_card/models/success_model.dart';
 import 'package:http/http.dart' as http;
 
-import '../utils/exception_utils.dart';
+import '../models/appError.dart';
+import '../models/cardTokenResponse.dart';
 
 class ApiService {
-  static Future<MyResponse> createCardToken({
+  static Future<CardTokenResponse> createCardToken({
     required cardNumber,
     required cardHolder,
     required cardExpiryMonth,
@@ -33,7 +35,7 @@ class ApiService {
         }),
       );
       if (response.statusCode == 201) {
-        return MyResponse(
+        return CardTokenResponse(
           success: true,
           token: successModelFromJson(response.body).cardToken,
         );
@@ -44,7 +46,7 @@ class ApiService {
           ),
         ) as Map<String, dynamic>;
 
-        return MyResponse(
+        return CardTokenResponse(
           success: false,
           error: AppError(
             errorType: AppErrorType.server,
@@ -55,23 +57,20 @@ class ApiService {
         );
       }
     } on SocketException {
-      return MyResponse(
-        success: false,
-        error: const AppError(
-          errorType: AppErrorType.connection,
-          title: 'Internet issue',
-          message: 'Check your connectivity and retry...',
-        ),
-      );
+      return CardTokenResponse(
+          success: false,
+          error: const AppError(
+            errorType: AppErrorType.connection,
+            title: ExceptionConstants.noInternetTitle,
+            message: ExceptionConstants.noInternetMessage,
+          ));
     } catch (e) {
-      return MyResponse(
-        success: false,
-        error: const AppError(
-          errorType: AppErrorType.parsing,
-          title: 'parsing issue',
-          message: 'A casting problem has been caught...',
-        ),
-      );
+      return CardTokenResponse(
+          success: false,
+          error: const AppError(
+              errorType: AppErrorType.parsing,
+              title: ExceptionConstants.pasrsingIssueTitle,
+              message: ExceptionConstants.pasrsingIssueMessage));
     }
   }
 }

@@ -12,11 +12,3 @@ class AppError {
 }
 
 enum AppErrorType { server, connection, parsing }
-
-class MyResponse {
-  final bool success;
-  final String? token;
-  final AppError? error;
-
-  MyResponse({required this.success, this.token, this.error});
-}
