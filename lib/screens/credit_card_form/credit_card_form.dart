@@ -149,10 +149,12 @@ class _CreditCardFormState extends State<CreditCardForm> {
                       ],
                     ),
                     DibsyEnvironnement.live == DibsyConfig.environnement
-                        ? const Padding(
-                            padding: EdgeInsets.only(top: 16.0),
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
                             child: CustomCheckBox(
-                              isChecked: false,
+                              onChange: (value) {
+                                print('isChecked== $value');
+                              },
                             ),
                           )
                         : Container(),

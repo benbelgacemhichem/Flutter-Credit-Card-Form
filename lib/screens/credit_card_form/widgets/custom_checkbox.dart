@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomCheckBox extends StatefulWidget {
-  final bool isChecked;
-  const CustomCheckBox({Key? key, required this.isChecked}) : super(key: key);
+  final ValueChanged<bool> onChange;
+
+  const CustomCheckBox({Key? key, required this.onChange}) : super(key: key);
 
   @override
   State<CustomCheckBox> createState() => _CustomCheckBoxState();
@@ -22,6 +23,7 @@ class _CustomCheckBoxState extends State<CustomCheckBox> {
                 setState(() {
                   isSelected = !isSelected;
                 });
+                widget.onChange(isSelected);
               },
               child: AnimatedContainer(
                 duration: const Duration(microseconds: 500),
