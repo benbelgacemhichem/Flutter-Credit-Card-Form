@@ -38,8 +38,11 @@ class ApiService {
           token: successModelFromJson(response.body).cardToken,
         );
       } else {
-        final Map<String, dynamic> responseData =
-            jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = jsonDecode(
+          utf8.decode(
+            response.bodyBytes,
+          ),
+        ) as Map<String, dynamic>;
 
         return MyResponse(
           success: false,
@@ -53,18 +56,22 @@ class ApiService {
       }
     } on SocketException {
       return MyResponse(
-          success: false,
-          error: const AppError(
-              errorType: AppErrorType.connection,
-              title: 'Internet issue',
-              message: 'Check your connectivity and retry...'));
+        success: false,
+        error: const AppError(
+          errorType: AppErrorType.connection,
+          title: 'Internet issue',
+          message: 'Check your connectivity and retry...',
+        ),
+      );
     } catch (e) {
       return MyResponse(
-          success: false,
-          error: const AppError(
-              errorType: AppErrorType.parsing,
-              title: 'parsing issue',
-              message: 'A casting problem has been caught...'));
+        success: false,
+        error: const AppError(
+          errorType: AppErrorType.parsing,
+          title: 'parsing issue',
+          message: 'A casting problem has been caught...',
+        ),
+      );
     }
   }
 }
