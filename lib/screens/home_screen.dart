@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 onPaymentResult: (PaymentResponse? req) {
-                  // print(req?.rawData.);
+                  print(req?.rawData);
                 },
                 onError: (Object? e) {
                   print(e);

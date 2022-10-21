@@ -40,8 +40,11 @@ class ApiService {
           token: successModelFromJson(response.body).cardToken,
         );
       } else {
-        final Map<String, dynamic> responseData =
-            jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+        final Map<String, dynamic> responseData = jsonDecode(
+          utf8.decode(
+            response.bodyBytes,
+          ),
+        ) as Map<String, dynamic>;
 
         return CardTokenResponse(
           success: false,
