@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:add_card/constants/exception_constants.dart';
-import 'package:add_card/models/success_model.dart';
+import 'package:credit_card_form/constants/exception_constants.dart';
+import 'package:credit_card_form/models/success_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/appError.dart';

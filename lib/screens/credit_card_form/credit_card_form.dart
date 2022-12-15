@@ -1,10 +1,10 @@
-import 'package:add_card/services/api_services.dart';
-import 'package:add_card/constants/card_strings.dart';
-import 'package:add_card/constants/card_type.dart';
-import 'package:add_card/utils/card_utils.dart';
-import 'package:add_card/utils/env/environments.dart';
-import 'package:add_card/utils/input_formatters.dart';
-import 'package:add_card/screens/credit_card_form/widgets/custom_checkbox.dart';
+import 'package:credit_card_form/services/api_services.dart';
+import 'package:credit_card_form/constants/card_strings.dart';
+import 'package:credit_card_form/constants/card_type.dart';
+import 'package:credit_card_form/utils/card_utils.dart';
+import 'package:credit_card_form/utils/env/environments.dart';
+import 'package:credit_card_form/utils/input_formatters.dart';
+import 'package:credit_card_form/screens/credit_card_form/widgets/custom_checkbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
