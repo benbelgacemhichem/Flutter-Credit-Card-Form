@@ -10,8 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CreditCardForm extends StatefulWidget {
-  const CreditCardForm({Key? key}) : super(key: key);
-
+  const CreditCardForm({Key? key, this.onSuccess}) : super(key: key);
+  final ValueChanged<String>? onSuccess;
   @override
   State<CreditCardForm> createState() => _CreditCardFormState();
 }
@@ -218,7 +218,11 @@ class _CreditCardFormState extends State<CreditCardForm> {
         locale: 'en_US',
       );
       if (response.success) {
-        _showInSnackBar('Card Token == ${response.token}', true);
+        if (widget.onSuccess != null) {
+          widget.onSuccess!(response.token!);
+        } else {
+          _showInSnackBar('Card Token == ${response.token}', true);
+        }
       } else {
         _showInSnackBar(response.error!.message.toString(), false);
       }
