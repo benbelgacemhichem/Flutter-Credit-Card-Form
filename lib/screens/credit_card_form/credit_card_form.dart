@@ -10,8 +10,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CreditCardForm extends StatefulWidget {
-  const CreditCardForm({Key? key, this.onSuccess}) : super(key: key);
+  const CreditCardForm(
+      {Key? key, this.onSuccess, this.onFailure, this.onProcessing})
+      : super(key: key);
   final ValueChanged<String>? onSuccess;
+  final ValueChanged<String>? onFailure;
+  final VoidCallback? onProcessing;
   @override
   State<CreditCardForm> createState() => _CreditCardFormState();
 }
@@ -207,7 +211,9 @@ class _CreditCardFormState extends State<CreditCardForm> {
       );
     } else {
       form.save();
-
+      if (widget.onProcessing != null) {
+        widget.onProcessing!();
+      }
       final response = await ApiService.createCardToken(
         cardNumber: _paymentCard.number,
         cardHolder: _paymentCard.name,
@@ -224,7 +230,11 @@ class _CreditCardFormState extends State<CreditCardForm> {
           _showInSnackBar('Card Token == ${response.token}', true);
         }
       } else {
-        _showInSnackBar(response.error!.message.toString(), false);
+        if (widget.onFailure != null) {
+          widget.onFailure!(response.error!.message.toString());
+        } else {
+          _showInSnackBar(response.error!.message.toString(), false);
+        }
       }
     }
   }
