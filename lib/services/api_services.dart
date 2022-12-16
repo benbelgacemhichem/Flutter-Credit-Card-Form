@@ -51,8 +51,8 @@ class ApiService {
           error: AppError(
             errorType: AppErrorType.server,
             statusCode: response.statusCode,
-            title: responseData['title'],
-            message: responseData['details'],
+            title: responseData['title'] ?? responseData['error'],
+            message: responseData['details'] ?? responseData['error'],
           ),
         );
       }
