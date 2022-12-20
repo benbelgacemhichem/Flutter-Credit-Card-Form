@@ -1,3 +1,4 @@
+import 'package:credit_card_form/models/success_model.dart';
 import 'package:credit_card_form/services/api_services.dart';
 import 'package:credit_card_form/constants/card_strings.dart';
 import 'package:credit_card_form/constants/card_type.dart';
@@ -13,7 +14,7 @@ class CreditCardForm extends StatefulWidget {
   const CreditCardForm(
       {Key? key, this.onSuccess, this.onFailure, this.onProcessing})
       : super(key: key);
-  final ValueChanged<String>? onSuccess;
+  final ValueChanged<SuccessModel>? onSuccess;
   final ValueChanged<String>? onFailure;
   final VoidCallback? onProcessing;
   @override
@@ -25,7 +26,7 @@ class _CreditCardFormState extends State<CreditCardForm> {
   final _formKey = GlobalKey<FormState>();
   final _paymentCard = PaymentCard();
   var _autoValidateMode = AutovalidateMode.disabled;
-
+  bool tokenizeCard = false;
   @override
   void initState() {
     super.initState();
@@ -157,7 +158,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
                             padding: const EdgeInsets.only(top: 16.0),
                             child: CustomCheckBox(
                               onChange: (value) {
-                                print('isChecked== $value');
+                                tokenizeCard = value;
+                                setState(() {});
                               },
                             ),
                           )
@@ -225,7 +227,8 @@ class _CreditCardFormState extends State<CreditCardForm> {
       );
       if (response.success) {
         if (widget.onSuccess != null) {
-          widget.onSuccess!(response.token!);
+          widget.onSuccess!(SuccessModel(
+              cardToken: response.token!, tokenizeCard: tokenizeCard));
         } else {
           _showInSnackBar('Card Token == ${response.token}', true);
         }
