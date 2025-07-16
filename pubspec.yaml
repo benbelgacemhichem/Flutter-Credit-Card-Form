@@ -14,9 +14,12 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   
-  flutter_svg: ^1.1.1+1
-  http: ^0.13.5
-  mad_pay: ^2.2.12
+  # flutter_svg: ^2.0.10+1
+  # http: ^1.2.1
+  # mad_pay: ^2.2.12
+  flutter_svg: ^1.1.6
+  http: ^1.4.0
+  mad_pay: ^2.2.14
 
 dev_dependencies:
   flutter_test:
